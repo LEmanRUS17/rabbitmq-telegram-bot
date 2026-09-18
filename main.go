@@ -2,7 +2,7 @@ package main
 
 import (
 	"rabbitmq-telegram-bot/internal/config"
-	"rabbitmq-telegram-bot/internal/rabbitmq"
+	"rabbitmq-telegram-bot/internal/consumer"
 	"rabbitmq-telegram-bot/internal/telegram"
 
 	"context"
@@ -36,7 +36,7 @@ func main() {
 
 	slog.Info("starting consumer", "queue", cfg.QueueName)
 
-	if err := rabbitmq.Consume(ctx, cfg.RabbitMQURL, cfg.QueueName, handler); err != nil {
+	if err := consumer.Consume(ctx, cfg.RabbitMQURL, cfg.QueueName, handler); err != nil {
 		slog.Error("rabbitMQ error", "error", err)
 	}
 }
