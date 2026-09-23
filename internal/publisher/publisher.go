@@ -2,14 +2,14 @@ package publisher
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"errors"
 )
 
 type Publisher struct {
-	conn *amqp.Connection
-	ch   *amqp.Channel
+	conn      *amqp.Connection
+	ch        *amqp.Channel
 	queueName string
 }
 
@@ -21,7 +21,7 @@ func NewPublisher(url string, queueName string) (*Publisher, error) {
 	}
 
 	ch, err := conn.Channel()
-	
+
 	if err != nil {
 		conn.Close()
 		return nil, fmt.Errorf("failed to open channel: %w", err)
@@ -47,7 +47,7 @@ func (p *Publisher) Publish(ctx context.Context, body []byte) error {
 		false,
 		amqp.Publishing{
 			ContentType: "application/json",
-			Body: body,
+			Body:        body,
 		},
 	)
 

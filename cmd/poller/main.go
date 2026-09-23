@@ -1,16 +1,16 @@
 package main
 
 import (
-    	"rabbitmq-telegram-bot/internal/config"
-    	"rabbitmq-telegram-bot/internal/publisher"
-    	"rabbitmq-telegram-bot/internal/telegram"
+	"rabbitmq-telegram-bot/internal/config"
+	"rabbitmq-telegram-bot/internal/publisher"
+	"rabbitmq-telegram-bot/internal/telegram"
 
-    	"context"
-    	"encoding/json"
-    	"log/slog"
-		"os"
-		"os/signal"
-		"syscall"
+	"context"
+	"encoding/json"
+	"log/slog"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -42,28 +42,28 @@ func main() {
 
 	slog.Info("starting poller", "queue", cfg.UpdatesQueueName)
 
-	updates := receiver.Updates() 
-	
+	updates := receiver.Updates()
+
 	for {
 		select {
-			case <-ctx.Done():
-				slog.Info("shutdown signal received")
-				receiver.Stop()
-				return
-		
-			case update, ok := <-updates:
-				if !ok {
+		case <-ctx.Done():
+			slog.Info("shutdown signal received")
+			receiver.Stop()
+			return
+
+		case update, ok := <-updates:
+			if !ok {
 				slog.Info("stop poller")
 				return
 			}
 
 			body, err := json.Marshal(update)
-		
+
 			if err != nil {
 				slog.Warn("skip update: marshal failed", "error", err)
 				continue
 			}
-	
+
 			if err := pub.Publish(ctx, body); err != nil {
 				slog.Error("publish failed", "error", err)
 				panic(err)
