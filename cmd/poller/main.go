@@ -66,6 +66,7 @@ func main() {
 	
 			if err := pub.Publish(ctx, body); err != nil {
 				slog.Error("publish failed", "error", err)
+				panic(err)
 			}
 		}
 	}
