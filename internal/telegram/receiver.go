@@ -26,3 +26,7 @@ func (r *Receiver) Updates() tgbotapi.UpdatesChannel {
 
 	return r.bot.GetUpdatesChan(u)
 }
+
+func (r *Receiver) Stop() {
+	r.bot.StopReceivingUpdates()
+}
